@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aventura Crash Bandicoot</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Barra de Progresso Superior (Inicia escondida) -->
+    <div class="progresso-container" id="progresso-container">
+        <div class="progresso-barra" id="progresso-barra"></div>
+    </div>
+
+    <main class="container">
+        
+        <!-- TELA INICIAL (Usa a imagem exata do jogo) -->
+        <section id="ecra-inicio" class="caixa-principal ativa">
+            <div class="container-imagem-titulo">
+                <!-- Imagem do Menu Clássico -->
+                <img src="crash-title.jpg" alt="Tela de Título Crash Bandicoot" class="img-titulo">
+                
+                <!-- Botão Transparente sobre a palavra START -->
+                <button id="btn-start" class="btn-start-overlay" title="Clique para Iniciar"></button>
+            </div>
+        </section>
+
+        <!-- Pergunta 1 -->
+        <section class="caixa-principal pergunta-item">
+            <h1 class="titulo-pergunta">1. O Herói</h1>
+            <p class="texto-pergunta">Com quem você vai começar essa aventura?</p>
+            <div class="alternativas">
+                <button class="botao-alternativa" data-historia="A sua aventura começou com o clássico Crash girando por tudo que via pela frente.">
+                    A) Crash Bandicoot
+                </button>
+                <button class="botao-alternativa" data-historia="A sua aventura começou com a genial Coco, hackeando sistemas e usando muita tecnologia.">
+                    B) Coco Bandicoot
+                </button>
+            </div>
+        </section>
+
+        <!-- Pergunta 2 -->
+        <section class="caixa-principal pergunta-item">
+            <h1 class="titulo-pergunta">2. O Protetor</h1>
+            <p class="texto-pergunta">Qual máscara mágica vai te proteger pelo caminho?</p>
+            <div class="alternativas">
+                <button class="botao-alternativa" data-historia="Com a ajuda do sábio Aku Aku (OODABAGAH!), você se sentiu invencível.">
+                    A) Aku Aku (A máscara do bem)
+                </button>
+                <button class="botao-alternativa" data-historia="Com o poder sombrio de Uka Uka ao seu lado, você botou medo em qualquer inimigo.">
+                    B) Uka Uka (A máscara do mal)
+                </button>
+            </div>
+        </section>
+
+        <!-- Pergunta 3 -->
+        <section class="caixa-principal pergunta-item">
+            <h1 class="titulo-pergunta">3. A Montaria</h1>
+            <p class="texto-pergunta">No meio da fase, você encontra um animal para montar. Qual você escolhe?</p>
+            <div class="alternativas">
+                <button class="botao-alternativa" data-historia="O caminho ficou mais rápido quando você montou no fofinho Urso Polar, deslizando no gelo.">
+                    A) Urso Polar
+                </button>
+                <button class="botao-alternativa" data-historia="A coisa ficou jurássica quando você subiu nas costas do bebê T-Rex para esmagar as caixas.">
+                    B) Bebê T-Rex
+                </button>
+            </div>
+        </section>
+
+        <!-- Pergunta 4 -->
+        <section class="caixa-principal pergunta-item">
+            <h1 class="titulo-pergunta">4. O Cenário</h1>
+            <p class="texto-pergunta">Onde está acontecendo o desafio principal dessa fase?</p>
+            <div class="alternativas">
+                <button class="botao-alternativa" data-historia="Vocês enfrentaram perigos nas praias tropicais de N. Sanity Island.">
+                    A) N. Sanity Island
+                </button>
+                <button class="botao-alternativa" data-historia="O desafio rolou solto nos laboratórios tecnológicos e perigosos do futuro.">
+                    B) O Laboratório do Futuro
+                </button>
+            </div>
+        </section>
+
+        <!-- Pergunta 5 -->
+        <section class="caixa-principal pergunta-item">
+            <h1 class="titulo-pergunta">5. O Chefão</h1>
+            <p class="texto-pergunta">No final da fase, quem aparece para te impedir?</p>
+            <div class="alternativas">
+                <button class="botao-alternativa" data-historia="No fim, tudo resultou em uma batalha épica contra o cabeçudo Dr. Neo Cortex. Wumpas pra todo lado!">
+                    A) Dr. Neo Cortex
+                </button>
+                <button class="botao-alternativa" data-historia="No fim, você precisou desviar dos pulos esmagadores do musculoso Tiny Tiger na arena romana. Que aventura!">
+                    B) Tiny Tiger
+                </button>
+            </div>
+        </section>
+
+        <!-- RESULTADO FINAL -->
+        <section id="caixa-resultado" class="caixa-principal">
+            <h1 class="titulo-pergunta">Sua História no Jogo</h1>
+            <p class="texto-pergunta" id="texto-resultado"></p>
+            <button class="btn-reiniciar" onclick="location.reload()">Jogar Novamente 🔄</button>
+        </section>
+
+    </main>
+
+    <script>
+        const ecraInicio = document.getElementById('ecra-inicio');
+        const btnStart = document.getElementById('btn-start');
+        const progressoContainer = document.getElementById('progresso-container');
+        const progressoBarra = document.getElementById('progresso-barra');
+        
+        const perguntas = document.querySelectorAll('.pergunta-item');
+        const botoesOpcao = document.querySelectorAll('.botao-alternativa');
+        const caixaResultado = document.getElementById('caixa-resultado');
+        const textoResultado = document.getElementById('texto-resultado');
+
+        let respostasEscolhidas = [];
+        let perguntaAtual = 0;
+        const totalPerguntas = perguntas.length;
+
+        // Clique no botão START sobre a imagem
+        btnStart.addEventListener('click', function() {
+            ecraInicio.classList.remove('ativa');
+            progressoContainer.classList.add('visivel');
+            
+            // Ativa a primeira pergunta
+            perguntas[0].classList.add('ativa');
+            atualizarProgresso();
+        });
+
+        function atualizarProgresso() {
+            const porcentagem = ((perguntaAtual + 1) / totalPerguntas) * 100;
+            progressoBarra.style.width = porcentagem + '%';
+        }
+
+        // Lógica de seleção
+        botoesOpcao.forEach(botao => {
+            botao.addEventListener('click', function() {
+                const caixaAtual = this.closest('.caixa-principal');
+                const opcoesDestaPergunta = caixaAtual.querySelectorAll('.botao-alternativa');
+
+                this.classList.add('escolhida');
+                respostasEscolhidas.push(this.getAttribute('data-historia'));
+
+                opcoesDestaPergunta.forEach(b => b.disabled = true);
+
+                setTimeout(() => {
+                    caixaAtual.classList.remove('ativa');
+
+                    perguntaAtual++;
+                    if (perguntaAtual < totalPerguntas) {
+                        perguntas[perguntaAtual].classList.add('ativa');
+                        atualizarProgresso();
+                    } else {
+                        mostrarResultado();
+                    }
+                }, 400);
+            });
+        });
+
+        function mostrarResultado() {
+            textoResultado.innerText = respostasEscolhidas.join(' ');
+            caixaResultado.classList.add('ativa');
+            progressoBarra.style.width = '100%';
+        }
+    </script>
+</body>
+</html>
